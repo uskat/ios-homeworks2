@@ -29,8 +29,8 @@ class FeedViewController: UIViewController {
         stackView.spacing = 10
         return stackView
     }()
-    private let feedButton1: UIButton = {
-        let button = UIButton()
+    private lazy var feedButton1: CustomButton = {
+        let button = CustomButton()
         //button.layer.cornerRadius = 4
         button.backgroundColor = .systemBlue
         button.setTitle("New Post", for: .normal)
@@ -38,8 +38,8 @@ class FeedViewController: UIViewController {
         button.addTarget(self, action: #selector(tapFeedButton), for: .touchUpInside)
         return button
     }()
-    private let feedButton2: UIButton = {
-        let button = UIButton()
+    private lazy var feedButton2: CustomButton = {
+        let button = CustomButton()
         //button.layer.cornerRadius = 4
         button.backgroundColor = .systemBlue
         button.setTitle("New Post!!!", for: .normal)
