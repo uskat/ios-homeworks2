@@ -1,14 +1,23 @@
 
 import UIKit
 
+public var screenWidth: CGFloat {
+    return UIScreen.main.bounds.width
+}
+public var screenHeight: CGFloat {
+    return UIScreen.main.bounds.height
+}
+
 class ProfileHeaderView: UIView {
-    public var screenWidth: CGFloat {
-        return UIScreen.main.bounds.width
-    }
-    public var screenHeight: CGFloat {
-        return UIScreen.main.bounds.height
-    }
+
     private var statusText = "Waiting for something....."
+    
+    private let headerView: UIView = {
+        let myView = UIView()
+        myView.translatesAutoresizingMaskIntoConstraints = false
+        myView.backgroundColor = .systemGray5
+        return myView
+    }()
     
     private let profileImage: UIImageView = {
         let imageView = UIImageView()
@@ -76,6 +85,9 @@ class ProfileHeaderView: UIView {
         let status = UITextField()
         status.font = UIFont.systemFont(ofSize: 15, weight: .regular)
         status.translatesAutoresizingMaskIntoConstraints = false
+        status.placeholder = "введите новый статус"
+        status.adjustsFontSizeToFitWidth = true
+        status.minimumFontSize = 10
         status.backgroundColor = .white
         status.layer.cornerRadius = 12
         status.layer.borderWidth = 1
@@ -132,40 +144,51 @@ class ProfileHeaderView: UIView {
     }
     
     func showProfileHeaderView() {
-        [profileImage, profileLabel, mainButton, profileStatus, editStatus, buttonAccept].forEach { self.addSubview($0) }
+        addSubview(headerView)
         
         NSLayoutConstraint.activate([
-            profileImage.topAnchor.constraint(equalTo: self.topAnchor, constant: 16),
-            profileImage.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
+            headerView.topAnchor.constraint(equalTo: topAnchor),
+            headerView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            headerView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            headerView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            headerView.heightAnchor.constraint(equalToConstant: 240)
+        ])
+        
+        [profileImage, profileLabel, mainButton, profileStatus, editStatus, buttonAccept].forEach { headerView.addSubview($0) }
+        //translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            profileImage.topAnchor.constraint(equalTo: headerView.topAnchor, constant: 16),
+            profileImage.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 16),
             profileImage.widthAnchor.constraint(equalToConstant: 140),
             profileImage.heightAnchor.constraint(equalToConstant: 140)
         ])
         
         NSLayoutConstraint.activate([
-            profileLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: 27),
+            profileLabel.topAnchor.constraint(equalTo: headerView.topAnchor, constant: 27),
             profileLabel.leadingAnchor.constraint(equalTo: profileImage.trailingAnchor, constant: 16),
-            profileLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16),
+            profileLabel.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -16),
             profileLabel.heightAnchor.constraint(equalToConstant: 30)
         ])
         
         NSLayoutConstraint.activate([
             mainButton.topAnchor.constraint(equalTo: profileImage.bottomAnchor, constant: 16),
-            mainButton.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
-            mainButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16),
+            mainButton.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 16),
+            mainButton.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -16),
             mainButton.heightAnchor.constraint(equalToConstant: 50)
         ])
         
         NSLayoutConstraint.activate([
             profileStatus.bottomAnchor.constraint(equalTo: mainButton.topAnchor, constant: -56),
             profileStatus.leadingAnchor.constraint(equalTo: profileImage.trailingAnchor, constant: 16),
-            profileStatus.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16),
+            profileStatus.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -16),
             profileStatus.heightAnchor.constraint(equalToConstant: 26)
         ])
         
         NSLayoutConstraint.activate([
             editStatus.bottomAnchor.constraint(equalTo: mainButton.topAnchor, constant: -8),
             editStatus.leadingAnchor.constraint(equalTo: profileImage.trailingAnchor, constant: 16),
-            editStatus.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16),
+            editStatus.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -16),
             editStatus.heightAnchor.constraint(equalToConstant: 40)
         ])
         
@@ -179,6 +202,7 @@ class ProfileHeaderView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        showProfileHeaderView()
     }
     required init?(coder: NSCoder) {
         super.init(coder: coder)
