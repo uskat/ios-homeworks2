@@ -72,6 +72,7 @@ class LogInViewController: UIViewController {
         $0.delegate = self
         $0.textColor = .black
         $0.tintColor = UIColor.AccentColor.normal
+        $0.layer.sublayerTransform = CATransform3DMakeTranslation(5, 0, 0)
         $0.autocapitalizationType = .none
         $0.backgroundColor = .systemGray6
         return $0
@@ -85,6 +86,7 @@ class LogInViewController: UIViewController {
         $0.delegate = self
         $0.textColor = .black
         $0.tintColor = UIColor.AccentColor.normal
+        $0.layer.sublayerTransform = CATransform3DMakeTranslation(5, 0, 0)
         $0.backgroundColor = .systemGray6
         $0.isSecureTextEntry = true
         return $0

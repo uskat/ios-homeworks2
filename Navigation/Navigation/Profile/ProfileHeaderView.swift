@@ -92,6 +92,7 @@ class ProfileHeaderView: UIView {
         status.layer.cornerRadius = 12
         status.layer.borderWidth = 1
         status.layer.borderColor = UIColor.black.cgColor
+        status.layer.sublayerTransform = CATransform3DMakeTranslation(5, 0, 0)
         status.addTarget(self, action: #selector(beginToEditStatus), for: .allEditingEvents)
         status.addTarget(self, action: #selector(changeStatusText), for: .editingChanged)
         status.addTarget(self, action: #selector(endToEditStatus), for: .editingDidEnd)
