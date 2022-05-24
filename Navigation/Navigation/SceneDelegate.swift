@@ -42,16 +42,5 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Use this method to save data, release shared resources, and store enough scene-specific state information
         // to restore the scene back to its current state.
     }
-    
-    func checkOrientation() {
-        if (UIScreen.main.bounds.height > UIScreen.main.bounds.width) {
-            //print("height > width")
-            UIApplication.shared.statusBarUIView?.isHidden = false
-            UIApplication.shared.statusBarUIView?.backgroundColor = .white
-        } else {
-            //print("isHidden")
-            UIApplication.shared.statusBarUIView?.isHidden = true
-        }
-    }
 }
 
