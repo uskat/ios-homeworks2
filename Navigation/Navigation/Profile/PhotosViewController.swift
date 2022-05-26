@@ -12,6 +12,10 @@ class PhotosViewController: UIViewController {
         showCollection()
     }
     
+    override func viewWillLayoutSubviews() {
+        checkOrientation()
+    }
+    
     private lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
@@ -53,7 +57,7 @@ extension PhotosViewController: UICollectionViewDelegateFlowLayout {
     private var inSpace: CGFloat { return 8 }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let width = (collectionView.bounds.width - 4 * inSpace) / 3
+        let width = (absoluteWidth - 4 * inSpace) / 3
         return CGSize(width: width, height: width)
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {

@@ -3,17 +3,18 @@ import UIKit
 
 class ProfileViewController: UIViewController {
 
-    private var profileHeaderView = ProfileHeaderView()
+    private let profileHeaderView = ProfileHeaderView()
     private var posts: [Post] = Post.addPosts()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
         showProfileTable()
+        tapGestureOnProfileImage()
     }
     
     override func viewWillLayoutSubviews() {
-        //sceneDelegate.checkOrientation()
+        checkOrientation()
     }
     
     //private func showHeaderView() {
@@ -51,7 +52,38 @@ class ProfileViewController: UIViewController {
             tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
     }
+
+    //MARK: жесты и анимация
+    
+    func tapGestureOnProfileImage() {
+        print("tapGesture?")
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tapAction))
+        profileHeaderView.profileImage.addGestureRecognizer(tapGesture)
+    }
+
+    @objc private func tapAction() {
+        print("tap")
+        bottomBlurView.constant = screenHeight
+        self.tableView.layoutIfNeeded()
+        
+        UIView.animate(withDuration: 0.5, delay: 0.0, options: .curveEaseOut) { [self] in
+            centerXProfileImage.constant = screenWidth / 2
+            centerYProfileImage.constant = screenHeight / 2 - 80 //magic number для корректировки вертикальности
+            widthProfileImage.constant = absoluteWidth
+            heightProfileImage.constant = absoluteWidth
+            profileHeaderView.profileImage.layer.cornerRadius = 0
+            profileHeaderView.blurView.alpha = 1.0
+            self.view.layoutIfNeeded()
+            self.view.setNeedsUpdateConstraints()
+        } completion: { _ in
+        UIView.animate(withDuration: 0.3, delay: 0.0, options: .curveEaseOut) { [self] in
+            self.profileHeaderView.buttonX.isHidden = false
+            self.profileHeaderView.buttonX.alpha = 1.0
+        } completion: { _ in  }}
+    }
+    
 }
+    
 //MARK: UITableViewDataSource
 extension ProfileViewController: UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -81,12 +113,14 @@ extension ProfileViewController: UITableViewDataSource {
         }
     }
 }
-//MARK: высота ячейки (строки) в таблице. Либо фиксированное значение, либо авто - UITableView.automaticDimension
+
+//MARK: высота ячейки в таблице.
+//Либо фиксированное значение, либо авто - UITableView.automaticDimension
 extension ProfileViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         UITableView.automaticDimension
     }
-//MARK: устанавливаем HEADER для нашей таблицы !!!
+//MARK: устанавливаем HEADER для таблицы !
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         //profileHeaderView.showProfileHeaderView()
         return profileHeaderView
@@ -98,7 +132,16 @@ extension ProfileViewController: UITableViewDelegate {
         if indexPath.row == 0 {
             //let post = PostViewController()
             let post = PhotosViewController()
-            navigationController?.pushViewController(post, animated: true)
+            //navigationController?.pushViewController(post, animated: true)
+            
+            //анимированный push-переход с эффектом fade из Photos в Photo Galery
+            let transition = CATransition()
+            transition.duration = 2.5
+            transition.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
+            transition.type = CATransitionType.fade
+            transition.subtype = CATransitionSubtype.fromTop
+            self.navigationController?.view.layer.add(transition, forKey: nil)
+            self.navigationController?.pushViewController(post, animated: false)
         }
     }
 }
@@ -113,3 +156,64 @@ private func showLogoutBarButton() {
 @objc private func tapLogoutBarButton() {
     self.dismiss(animated: true)
 }*/
+
+
+//MARK: разные виды анимации
+
+//увеличение фото на весь экран (без движения)
+
+//let newImageView = UIImageView(image: myView.image)
+//newImageView.frame = UIScreen.main.bounds
+//newImageView.backgroundColor = .black
+//newImageView.contentMode = .scaleAspectFit
+//newImageView.isUserInteractionEnabled = true
+////let tap = UITapGestureRecognizer(target: self, action: #selector(dismissFullscreenImage))
+////newImageView.addGestureRecognizer(tap)
+//self.view.addSubview(newImageView)
+//self.navigationController?.isNavigationBarHidden = true
+//self.tabBarController?.tabBar.isHidden = true
+
+/*@objc func dismissFullscreenImage(_ sender: UITapGestureRecognizer) {
+    self.navigationController?.isNavigationBarHidden = false
+    self.tabBarController?.tabBar.isHidden = false
+    sender.view?.removeFromSuperview()
+}*/
+
+
+//Код BlurEffect
+
+//    private func addBlurEffect() {
+//        let blurEffect = UIBlurEffect(style: .dark)
+//        let blurEffectView = UIVisualEffectView(effect: blurEffect)
+//        blurEffectView.alpha = 0.85
+//        blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+//        blurEffectView.translatesAutoresizingMaskIntoConstraints = false
+//
+//        view.addSubview(blurEffectView)
+//
+//        NSLayoutConstraint.activate([
+//            blurEffectView.topAnchor.constraint(equalTo: view.topAnchor),
+//            blurEffectView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+//            blurEffectView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+//            blurEffectView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+//        ])
+//      }
+
+// Первая версия анимации открытия аватарки
+/*
+let sizeScale = CABasicAnimation(keyPath: "transform.scale")
+sizeScale.fromValue = 1
+sizeScale.toValue = absoluteWidth / 140
+
+let positionAnimation = CABasicAnimation(keyPath: #keyPath(CALayer.position))
+positionAnimation.fromValue = myView.centerYAnchor
+positionAnimation.toValue = CGPoint(x: view.center.x, y: view.center.y - 70)
+
+let group = CAAnimationGroup()
+group.duration = 0.5
+group.animations = [sizeScale, positionAnimation]
+group.timingFunction = CAMediaTimingFunction(name: .easeIn)
+group.fillMode = .forwards                                  //запрет возврата анимации в исходное положение
+group.isRemovedOnCompletion = false                         //запрет возврата анимации в исходное положение
+myView.layer.add(group, forKey: nil)
+//myView.layer.position = CGPoint(x: view.center.x, y: view.center.y - 70)*/

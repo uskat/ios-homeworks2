@@ -98,7 +98,7 @@ class ProfileTableViewCell: UITableViewCell {
             postImage.topAnchor.constraint(equalTo: postName.bottomAnchor, constant: 12),
             postImage.leadingAnchor.constraint(equalTo: postView.leadingAnchor),
             postImage.trailingAnchor.constraint(equalTo: postView.trailingAnchor),
-            postImage.heightAnchor.constraint(equalToConstant: screenWidth),
+            postImage.heightAnchor.constraint(equalToConstant: absoluteWidth),
 
             postDescription.topAnchor.constraint(equalTo: postImage.bottomAnchor, constant: 16),
             postDescription.leadingAnchor.constraint(equalTo: postName.leadingAnchor),

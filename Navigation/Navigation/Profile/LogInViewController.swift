@@ -21,6 +21,10 @@ class LogInViewController: UIViewController {
         showLoginItems()
     }
     
+    override func viewWillLayoutSubviews() {
+        checkOrientation()
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         self.navigationController?.navigationBar.isHidden = true //прячем NavigationBar
         notification.addObserver(self, selector: #selector(keyboardAppear), name: UIResponder.keyboardWillShowNotification, object: nil)

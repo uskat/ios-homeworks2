@@ -1,15 +1,29 @@
 
 import UIKit
 
+public var topBarHeight: CGFloat = 0
+
+public var absoluteWidth: CGFloat {
+    var width: CGFloat = 0
+    if (UIScreen.main.bounds.height > UIScreen.main.bounds.width) {
+        width = UIScreen.main.bounds.width
+    } else {
+        width = UIScreen.main.bounds.height
+    }
+    return width
+}
+
 //код для проверки ориентации экрана и изменения видимости статус бара.
 public func checkOrientation() {
     if (UIScreen.main.bounds.height > UIScreen.main.bounds.width) {
         //print("height > width")
         UIApplication.shared.statusBarUIView?.isHidden = false
         UIApplication.shared.statusBarUIView?.backgroundColor = .systemGray6
+        //absoluteWidth = UIScreen.main.bounds.width
     } else {
         //print("isHidden")
         UIApplication.shared.statusBarUIView?.isHidden = true
+        //absoluteWidth = UIScreen.main.bounds.height
     }
 }
 
@@ -48,19 +62,28 @@ class MainTabBarController: UITabBarController {
     //let secondVC = ProfileViewController()
     let secondVC = LogInViewController()
     
-    /*func findNavigationBarHeight() -> Int {
-        if let k = secondVC.navigationController?.navigationBar.frame.height {
-            return Int(k) //k2
+    func findNavigationBarHeight() -> CGFloat {
+        if let height = secondVC.navigationController?.navigationBar.frame.height {
+            return height //k2
         } else { return 0 }
-    }*/
+    }
+    
+    func findTabBarHeight() -> CGFloat {
+        if let height = self.tabBarController?.tabBar.frame.height {
+            return height //k3
+        } else { return 0 }
+    }
+    
+    func findStatusBarHeight() -> CGFloat {  //k1
+        return UIApplication.shared.statusBarFrame.size.height
+    }
 
     override func viewDidLoad() {
         setupControllers()
         super.viewDidLoad()
         
         //вычисляем высоту NavigationBar и StatusBar для сдвига элементов Profile
-        //let appDelegate = AppDelegate()
-        //AppDelegate.topBarHeight = findNavigationBarHeight() + appDelegate.findStatusBarHeight()
+        topBarHeight = findNavigationBarHeight() + findStatusBarHeight()
         //красим все бары в один цвет
         UINavigationBar.appearance().backgroundColor = .systemGray6
         //UIBarButtonItem.appearance().tintColor = UIColor.magenta
