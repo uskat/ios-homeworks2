@@ -3,6 +3,7 @@ import UIKit
 
 class PhotosViewController: UIViewController {
 
+    let profileHeaderView = ProfileHeaderView()
     var photos = Photo.addPhotos()
     
     override func viewDidLoad() {
@@ -37,6 +38,88 @@ class PhotosViewController: UIViewController {
             collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
     }
+    
+    let buttonX: UIButton = {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.layer.cornerRadius = 12
+        $0.backgroundColor = .systemGray
+        $0.setImage(UIImage(systemName: "x.circle"), for: .normal)
+        $0.tintColor = .white
+        $0.alpha = 0.0
+        $0.isHidden = true
+        $0.addTarget(self, action: #selector(tapButtonX), for: .touchUpInside)
+        return $0
+    }(UIButton())
+    
+    @objc private func tapButtonX() {
+        print("tap x")
+//        let myView: UIView = {
+//            $0.translatesAutoresizingMaskIntoConstraints = false
+//            $0.backgroundColor = .none
+//            return $0
+//        }(UIView())
+        
+        UIView.animate(withDuration: 0.3, delay: 0.0, options: .curveEaseOut) { [self] in
+            self.buttonX.alpha = 0.0
+        } completion: { _ in
+            self.buttonX.isHidden = true
+        }
+        
+        UIView.transition(with: collectionView, duration: 1.0, options: .transitionFlipFromBottom, animations: { [self] in
+            profileHeaderView.blurBackgroundEffect().removeFromSuperview()
+            collectionView.isUserInteractionEnabled = true
+            myView.removeFromSuperview()
+    
+            //self.collectionView.addSubview(myView)
+        }, completion: nil)
+    }
+    
+    private var myImageView: UIImageView = {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.backgroundColor = .none
+        $0.contentMode = .scaleAspectFit
+        return $0
+    }(UIImageView())
+    
+    private var myView: UIView = {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        //$0.backgroundColor = .white
+        //$0.isUserInteractionEnabled = true
+        return $0
+    }(UIView())
+    
+    func showViewWithPhotoOnTap(_ image: UIImage)  {
+        
+        UIView.transition(with: collectionView, duration: 1.0, options: .transitionFlipFromBottom, animations: { [self] in
+            self.collectionView.addSubview(myView)
+            myView.addSubview(profileHeaderView.blurBackgroundEffect())
+            myImageView.image = image
+            myView.addSubview(myImageView)
+            myView.addSubview(buttonX)
+            NSLayoutConstraint.activate([
+                myView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
+                myView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
+                myView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor),
+                myView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: 0),
+                
+                myImageView.centerXAnchor.constraint(equalTo: myView.centerXAnchor),
+                myImageView.centerYAnchor.constraint(equalTo: myView.centerYAnchor),
+                myImageView.widthAnchor.constraint(equalToConstant: absoluteWidth),
+                myImageView.heightAnchor.constraint(equalToConstant: absoluteWidth),
+                
+                buttonX.topAnchor.constraint(equalTo: myView.topAnchor, constant: 20),
+                buttonX.trailingAnchor.constraint(equalTo: myView.trailingAnchor, constant: -20),
+                buttonX.widthAnchor.constraint(equalToConstant: 24),
+                buttonX.heightAnchor.constraint(equalToConstant: 24)
+            ])
+        }, completion: nil)
+        UIView.animate(withDuration: 1.3, delay: 0.0, options: .curveEaseOut) { [self] in
+            self.buttonX.isHidden = false
+            self.buttonX.alpha = 1.0
+        } completion: { _ in  }
+
+    }
+    
 }
 
 //MARK: - UICollectionViewDataSource
@@ -70,5 +153,10 @@ extension PhotosViewController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         UIEdgeInsets(top: inSpace, left: inSpace, bottom: inSpace, right: inSpace)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let image = photos[indexPath.row].imageName
+        showViewWithPhotoOnTap(image)
     }
 }

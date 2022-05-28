@@ -58,27 +58,29 @@ class ProfileViewController: UIViewController {
     func tapGestureOnProfileImage() {
         print("tapGesture?")
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tapAction))
+        bottomBlurView.constant = screenHeight
+        //profileHeaderView.blurView.layoutIfNeeded()
+        profileHeaderView.blurView.setNeedsUpdateConstraints()
+        //tableView.layoutIfNeeded()
         profileHeaderView.profileImage.addGestureRecognizer(tapGesture)
     }
 
     @objc private func tapAction() {
         print("tap")
-        bottomBlurView.constant = screenHeight
-        self.tableView.layoutIfNeeded()
-        
+       
         UIView.animate(withDuration: 0.5, delay: 0.0, options: .curveEaseOut) { [self] in
-            centerXProfileImage.constant = screenWidth / 2
-            centerYProfileImage.constant = screenHeight / 2 - 80 //magic number для корректировки вертикальности
+            centerXProfileImage = profileHeaderView.profileImage.centerXAnchor.constraint(equalTo: self.tableView.centerXAnchor) //screenWidth / 2
+            centerYProfileImage = profileHeaderView.profileImage.centerYAnchor.constraint(equalTo: self.tableView.centerYAnchor) //screenHeight / 2 - 80 //magic number для корректировки вертикальности
             widthProfileImage.constant = absoluteWidth
             heightProfileImage.constant = absoluteWidth
             profileHeaderView.profileImage.layer.cornerRadius = 0
             profileHeaderView.blurView.alpha = 1.0
-            self.view.layoutIfNeeded()
-            self.view.setNeedsUpdateConstraints()
+            view.setNeedsUpdateConstraints()
+            profileHeaderView.profileImage.setNeedsUpdateConstraints()
         } completion: { _ in
         UIView.animate(withDuration: 0.3, delay: 0.0, options: .curveEaseOut) { [self] in
-            self.profileHeaderView.buttonX.isHidden = false
-            self.profileHeaderView.buttonX.alpha = 1.0
+            profileHeaderView.buttonX.isHidden = false
+            profileHeaderView.buttonX.alpha = 1.0
         } completion: { _ in  }}
     }
     
@@ -122,7 +124,6 @@ extension ProfileViewController: UITableViewDelegate {
     }
 //MARK: устанавливаем HEADER для таблицы !
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        //profileHeaderView.showProfileHeaderView()
         return profileHeaderView
     }
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -130,7 +131,6 @@ extension ProfileViewController: UITableViewDelegate {
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.row == 0 {
-            //let post = PostViewController()
             let post = PhotosViewController()
             //navigationController?.pushViewController(post, animated: true)
             

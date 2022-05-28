@@ -19,6 +19,7 @@ class LogInViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         showLoginItems()
+        //login.becomeFirstResponder()
     }
     
     override func viewWillLayoutSubviews() {
@@ -73,21 +74,32 @@ class LogInViewController: UIViewController {
         $0.translatesAutoresizingMaskIntoConstraints = false
         //$0.borderStyle = .roundedRect
         $0.placeholder = "Login"
+        $0.tag = 1
         $0.delegate = self
         $0.textColor = .black
         $0.tintColor = UIColor.AccentColor.normal
         $0.layer.sublayerTransform = CATransform3DMakeTranslation(5, 0, 0)
         $0.autocapitalizationType = .none
         $0.backgroundColor = .systemGray6
-        $0.becomeFirstResponder()
+        //$0.becomeFirstResponder()
         return $0
     }(UITextField())
+    
+    private lazy var loginAlert: UILabel = {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.text = ""
+        $0.textColor = .systemRed
+        $0.textAlignment = .right
+        $0.font = UIFont.systemFont(ofSize: 13, weight: .light)
+        return $0
+    }(UILabel())
     
     private lazy var pass: UITextField = {
         $0.font = UIFont.systemFont(ofSize: 16, weight: .regular)
         $0.translatesAutoresizingMaskIntoConstraints = false
         //$0.borderStyle = .roundedRect
         $0.placeholder = "Password"
+        $0.tag = 2
         $0.delegate = self
         $0.textColor = .black
         $0.tintColor = UIColor.AccentColor.normal
@@ -96,6 +108,15 @@ class LogInViewController: UIViewController {
         $0.isSecureTextEntry = true
         return $0
     }(UITextField())
+    
+    private lazy var passAlert: UILabel = {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.text = ""
+        $0.textColor = .systemRed
+        $0.textAlignment = .right
+        $0.font = UIFont.systemFont(ofSize: 13, weight: .light)
+        return $0
+    }(UILabel())
 
     private lazy var loginButton: CustomButton = {
         $0.translatesAutoresizingMaskIntoConstraints = false
@@ -116,10 +137,18 @@ class LogInViewController: UIViewController {
     }(CustomButton())
     
     @objc private func tapLoginButton() {
-        let profileViewController = ProfileViewController()
-        navigationController?.pushViewController(profileViewController, animated: true)
-        login.text = ""
-        pass.text = ""
+        print("_______________")
+        statusEntry = true
+        checkInputedData(login, loginAlert)
+        print("login status \(statusEntry)")
+        checkInputedData(pass, passAlert)
+        print("pass status \(statusEntry)")
+        if statusEntry == true {
+            let profileViewController = ProfileViewController()
+            navigationController?.pushViewController(profileViewController, animated: true)
+            login.text = ""
+            pass.text = ""
+        }
     }
     
     func showLoginItems() {
@@ -144,6 +173,7 @@ class LogInViewController: UIViewController {
         
         [logoItem, stackLogin, loginButton].forEach({ contentView.addSubview($0) })
         [login, pass].forEach({ stackLogin.addArrangedSubview($0) })
+        [loginAlert, passAlert].forEach({ contentView.addSubview($0) })
         
         NSLayoutConstraint.activate([
             logoItem.topAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.topAnchor, constant: 120),
@@ -160,7 +190,15 @@ class LogInViewController: UIViewController {
             loginButton.leadingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.leadingAnchor, constant: 16),
             loginButton.trailingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.trailingAnchor, constant: -16),
             loginButton.heightAnchor.constraint(equalToConstant: 50),
-            loginButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16)
+            loginButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16),
+            
+            loginAlert.centerYAnchor.constraint(equalTo: login.centerYAnchor),
+            loginAlert.trailingAnchor.constraint(equalTo: login.trailingAnchor, constant: -5),
+            loginAlert.widthAnchor.constraint(equalToConstant: 220),
+            
+            passAlert.centerYAnchor.constraint(equalTo: pass.centerYAnchor),
+            passAlert.trailingAnchor.constraint(equalTo: pass.trailingAnchor, constant: -5),
+            passAlert.widthAnchor.constraint(equalToConstant: 220)
         ])
     }
 }
