@@ -143,11 +143,17 @@ class LogInViewController: UIViewController {
         print("login status \(statusEntry)")
         checkInputedData(pass, passAlert)
         print("pass status \(statusEntry)")
-        if statusEntry == true {
-            let profileViewController = ProfileViewController()
-            navigationController?.pushViewController(profileViewController, animated: true)
-            login.text = ""
-            pass.text = ""
+        if statusEntry {
+            if checkLoginPass(login, pass) {
+                let profileViewController = ProfileViewController()
+                navigationController?.pushViewController(profileViewController, animated: true)
+                login.text = ""
+                pass.text = ""
+            } else {
+                alertMessageOnTextField(passAlert, "Incorrect login or pass")
+                shakeMeBaby(login)
+                shakeMeBaby(pass)
+            }
         }
     }
     

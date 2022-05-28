@@ -9,7 +9,7 @@ class ProfileTableViewCell: UITableViewCell {
         return $0
     }(UIView())
     
-    private let postName: UILabel = {
+    let postName: UILabel = {
         $0.translatesAutoresizingMaskIntoConstraints = false
         //$0.backgroundColor = .lightGray
         $0.font = UIFont.systemFont(ofSize: 20, weight: .bold)
@@ -18,7 +18,7 @@ class ProfileTableViewCell: UITableViewCell {
         return $0
     }(UILabel())
     
-    private let postDescription: UITextView = {
+    let postDescription: UITextView = {
         $0.translatesAutoresizingMaskIntoConstraints = false
         //$0.backgroundColor = .white
         $0.font = UIFont.systemFont(ofSize: 14, weight: .regular)
@@ -30,14 +30,14 @@ class ProfileTableViewCell: UITableViewCell {
         return $0
     }(UITextView())
 
-    private let postImage: UIImageView = {
+    let postImage: UIImageView = {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.backgroundColor = .black
         $0.contentMode = .scaleAspectFit
         return $0
     }(UIImageView())
     
-    private let likes: UILabel = {
+    let likes: UILabel = {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.font = UIFont.systemFont(ofSize: 16, weight: .regular)
         $0.textColor = .black
@@ -48,7 +48,7 @@ class ProfileTableViewCell: UITableViewCell {
         return $0
     }(UILabel())
     
-    private let views: UILabel = {
+    let views: UILabel = {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.font = UIFont.systemFont(ofSize: 16, weight: .regular)
         $0.textColor = .black
@@ -81,7 +81,7 @@ class ProfileTableViewCell: UITableViewCell {
         //postView.layer.borderWidth = 10
         //postView.layer.borderColor = UIColor.purple.cgColor
     //}
-    private func show() {
+    func show() {
         [postView, postName, postDescription, postImage, likes, views].forEach { contentView.addSubview($0) }
         
         NSLayoutConstraint.activate([
