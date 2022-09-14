@@ -68,7 +68,7 @@ class InfoViewController: UIViewController {
         NSLayoutConstraint.activate([
             infoButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             infoButton.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            infoButton.widthAnchor.constraint(equalToConstant: profileHeaderView.screenWidth),
+            infoButton.widthAnchor.constraint(equalToConstant: screenWidth),
             infoButton.heightAnchor.constraint(equalToConstant: 50)
         ])
     }
