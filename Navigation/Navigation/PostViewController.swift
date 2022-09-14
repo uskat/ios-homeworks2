@@ -7,13 +7,12 @@ class PostViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemGray2
+        view.backgroundColor = .lightGray
         makeBarButton()
         if let post = post {
             title = post.title
         }
-        
-        
+
     }
     private func makeBarButton() {
         let button = UIBarButtonItem(title: "Info...", style: .plain, target: self, action: #selector(tapAction))

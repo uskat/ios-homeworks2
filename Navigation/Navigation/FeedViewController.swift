@@ -3,10 +3,9 @@ import UIKit
 
 class FeedViewController: UIViewController {
 
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .gray
+        view.backgroundColor = .darkGray
         makeButton()
     }
 
@@ -25,15 +24,16 @@ class FeedViewController: UIViewController {
         button.addTarget(self, action: #selector(tapButton), for: .touchUpInside)
         view.addSubview(button)
     }
-    
+
     @objc private func tapButton() {
         let thirdVC = PostViewController()
         thirdVC.post = newPost
         navigationController?.pushViewController(thirdVC, animated: true)
-        
     }
     
+    override func willMove(toParent parent: UIViewController?) {
+        
+    }
 
-    
 }
 
