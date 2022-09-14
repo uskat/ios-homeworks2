@@ -60,21 +60,21 @@ class ProfileHeaderView: UIView {
     
     @objc private func tapButtonX() {
         print("tap x")
-        bottomBlurView = blurView.bottomAnchor.constraint(equalTo: headerView.bottomAnchor)
-        headerView.addSubview(profileImage)
+        bottomBlurView = blurView.bottomAnchor.constraint(equalTo: bottomAnchor)
+        blurView.setNeedsUpdateConstraints()
+        //headerView.addSubview(profileImage)
         
         UIView.animate(withDuration: 0.5, delay: 0.0, options: .curveEaseIn) { [self] in
-
             centerXProfileImage = profileImage.centerXAnchor.constraint(equalTo: leadingAnchor, constant: space + sizeProfileImage / 2)
             centerYProfileImage = profileImage.centerYAnchor.constraint(equalTo: topAnchor, constant: space + sizeProfileImage / 2)
             widthProfileImage = profileImage.widthAnchor.constraint(equalToConstant: sizeProfileImage)
             heightProfileImage = profileImage.heightAnchor.constraint(equalToConstant: sizeProfileImage)
             NSLayoutConstraint.activate([centerXProfileImage, centerYProfileImage, widthProfileImage, heightProfileImage])
 
-            profileImage.setNeedsUpdateConstraints()
-            self.layoutIfNeeded()
-            self.profileImage.layer.cornerRadius = sizeProfileImage / 2
-            self.blurView.alpha = 0.0
+            setNeedsUpdateConstraints()
+            blurView.setNeedsUpdateConstraints()
+            profileImage.layer.cornerRadius = sizeProfileImage / 2
+            blurView.alpha = 0.0
         } completion: { _ in   }
 
         UIView.animate(withDuration: 0.3, delay: 0.0, options: .curveEaseOut) { [self] in
@@ -96,7 +96,7 @@ class ProfileHeaderView: UIView {
     
     let blurView: UIView = {
         $0.translatesAutoresizingMaskIntoConstraints = false
-        //$0.backgroundColor = .none
+        $0.backgroundColor = .none
         $0.alpha = 0.0
         return $0
     }(UIView())
@@ -132,6 +132,9 @@ class ProfileHeaderView: UIView {
         return button
     }()
     @objc private func tapMainButton() {
+        statusEntry = true
+        checkInputedData(editStatus, statusAlert)
+        print("status on Status \(statusEntry)")
         if let oldStatus = profileStatus.text {
             print("Прежний статус (до изменения) - \(oldStatus)")
         }
@@ -159,9 +162,10 @@ class ProfileHeaderView: UIView {
         let status = UITextField()
         status.font = UIFont.systemFont(ofSize: 15, weight: .regular)
         status.translatesAutoresizingMaskIntoConstraints = false
-        status.placeholder = "type new status"          //текстовая подсказка в поле textField
+        status.placeholder = "Type new status"          //текстовая подсказка в поле textField
         status.adjustsFontSizeToFitWidth = true         //уменьшение шрифта, если введенный текст не помещается
         status.minimumFontSize = 10                     //до какого значения уменьшается шрифт
+        status.tag = 3
         status.backgroundColor = .white
         status.layer.cornerRadius = 12
         status.layer.borderWidth = 1
@@ -185,6 +189,15 @@ class ProfileHeaderView: UIView {
     @objc private func endToEditStatus(_ textField: UITextField) {
         rotateAndSleep(0) //прячем вспомогательную кнопку без анимации
     }
+    
+    private lazy var statusAlert: UILabel = {
+        //$0.translatesAutoresizingMaskIntoConstraints = false
+        $0.text = ""
+        $0.textColor = .systemRed
+        $0.textAlignment = .right
+        $0.font = UIFont.systemFont(ofSize: 13, weight: .light)
+        return $0
+    }(UILabel())
 
     private lazy var buttonAccept: CustomButton = {
         let button = CustomButton()
@@ -198,6 +211,8 @@ class ProfileHeaderView: UIView {
         return button
     }()
     @objc private func tapAcceptStatusButton() {
+        statusEntry = true
+        checkInputedData(editStatus, statusAlert)
         endEditing(true)
         profileStatus.text = statusText
         editStatus.text = ""
@@ -263,7 +278,7 @@ class ProfileHeaderView: UIView {
         [blurView, profileImage, buttonX].forEach { headerView.addSubview($0) }
         blurView.addSubview(blurBackgroundEffect())
         
-        bottomBlurView = blurView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor)
+        bottomBlurView = blurView.bottomAnchor.constraint(equalTo: bottomAnchor)
         //topProfileImage = profileImage.topAnchor.constraint(equalTo: blurView.topAnchor, constant: space)
         //leadingProfileImage = profileImage.leadingAnchor.constraint(equalTo: blurView.leadingAnchor, constant: space)
         centerXProfileImage = profileImage.centerXAnchor.constraint(equalTo: headerView.leadingAnchor, constant: space + sizeProfileImage / 2)
@@ -272,9 +287,9 @@ class ProfileHeaderView: UIView {
         heightProfileImage = profileImage.heightAnchor.constraint(equalToConstant: sizeProfileImage)
         
         NSLayoutConstraint.activate([
-            blurView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
-            blurView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
-            blurView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
+            blurView.topAnchor.constraint(equalTo: topAnchor),
+            blurView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            blurView.trailingAnchor.constraint(equalTo: trailingAnchor),
             bottomBlurView,
             
             /*topProfileImage, leadingProfileImage,*/
