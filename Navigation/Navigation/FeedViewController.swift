@@ -24,7 +24,7 @@ class FeedViewController: UIViewController {
         button.addTarget(self, action: #selector(tapButton), for: .touchUpInside)
         view.addSubview(button)
     }
- 
+
     @objc private func tapButton() {
         let thirdVC = PostViewController()
         thirdVC.post = newPost
