@@ -3,10 +3,17 @@ import UIKit
 
 class FeedViewController: UIViewController {
 
+    private let sceneDelegate = SceneDelegate()
+    private let profileHeaderView = ProfileHeaderView()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .darkGray
-        makeButton()
+        view.backgroundColor = .systemGray4
+        showDefaultItems()
+    }
+    
+    override func viewWillLayoutSubviews() {
+        sceneDelegate.checkOrientation()
     }
 
     struct Post {
@@ -14,25 +21,50 @@ class FeedViewController: UIViewController {
     }
     private let newPost = Post(title: "Post")
     
-    private func makeButton() {
-        let button = UIButton(frame: CGRect(x: 0, y: 0, width: 150, height: 50))
-        button.layer.cornerRadius = 10
-        button.center = view.center
+    private let feedStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .vertical
+        stackView.distribution = .fillEqually
+        stackView.spacing = 10
+        return stackView
+    }()
+    private let feedButton1: UIButton = {
+        let button = UIButton()
+        //button.layer.cornerRadius = 4
         button.backgroundColor = .systemBlue
         button.setTitle("New Post", for: .normal)
         button.setTitle("Post opening...", for: .highlighted)
-        button.addTarget(self, action: #selector(tapButton), for: .touchUpInside)
-        view.addSubview(button)
-    }
+        button.addTarget(self, action: #selector(tapFeedButton), for: .touchUpInside)
+        return button
+    }()
+    private let feedButton2: UIButton = {
+        let button = UIButton()
+        //button.layer.cornerRadius = 4
+        button.backgroundColor = .systemBlue
+        button.setTitle("New Post!!!", for: .normal)
+        button.setTitle("Post opening...", for: .highlighted)
+        button.addTarget(self, action: #selector(tapFeedButton), for: .touchUpInside)
+        return button
+    }()
 
-    @objc private func tapButton() {
+    @objc private func tapFeedButton() {
         let thirdVC = PostViewController()
         thirdVC.post = newPost
         navigationController?.pushViewController(thirdVC, animated: true)
     }
     
-    override func willMove(toParent parent: UIViewController?) {
-        
+    private func showDefaultItems() {
+        view.addSubview(feedStackView)
+        [feedButton1, feedButton2].forEach { feedStackView.addArrangedSubview($0) }
+
+        NSLayoutConstraint.activate([
+            feedStackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            feedStackView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            feedStackView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            feedStackView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            feedStackView.heightAnchor.constraint(equalToConstant: 110)
+        ])
     }
 
 }
