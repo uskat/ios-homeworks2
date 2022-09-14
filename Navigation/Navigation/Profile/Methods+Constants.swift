@@ -1,14 +1,8 @@
-//
-//  Methods+Constants.swift
-//  Navigation
-//
-//  Created by Андрей Абрамов on 28/5/22.
-//
 
 import UIKit
 
 public let myLogin = "kenobi"
-public let myPass = "qwerty"
+public let myPass = "111111"
 public var statusEntry = true
 
 func placeHolder(_ textField: UITextField) -> String {
@@ -72,7 +66,7 @@ private func changeTextFieldColorAndText(_ textField: UITextField, _ message: St
     })
 }
 
-private func alertMessageOnTextField(_ alert: UILabel, _ message: String) {
+public func alertMessageOnTextField(_ alert: UILabel, _ message: String) {
     alert.text = message
     DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(2), execute: {
         alert.text = ""
@@ -80,8 +74,6 @@ private func alertMessageOnTextField(_ alert: UILabel, _ message: String) {
 }
 
 private func checkStatus(_ status: Bool) {
-    print("(Хмм...........  status = \(statusEntry)) ", terminator:  " : ")
-    
     if statusEntry {
         statusEntry = status
     } else {
@@ -89,6 +81,14 @@ private func checkStatus(_ status: Bool) {
     }
 }
 
+public func checkLoginPass(_ textFieldLogin: UITextField, _ textFieldPass: UITextField) -> Bool {
+    if textFieldLogin.text! == myLogin && textFieldPass.text! == myPass {
+        return true
+    } else {
+        return false
+    }
+}
+    
 func shakeMeBaby(_ shakedItem: UITextField) {
     let shake = CABasicAnimation(keyPath: "position")
     let xDelta = CGFloat(5)

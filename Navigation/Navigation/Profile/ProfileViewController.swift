@@ -4,6 +4,7 @@ import UIKit
 class ProfileViewController: UIViewController {
 
     private let profileHeaderView = ProfileHeaderView()
+    private let profileTableViewCell = ProfileTableViewCell()
     private var posts: [Post] = Post.addPosts()
 
     override func viewDidLoad() {
@@ -59,15 +60,13 @@ class ProfileViewController: UIViewController {
         print("tapGesture?")
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tapAction))
         bottomBlurView.constant = screenHeight
-        //profileHeaderView.blurView.layoutIfNeeded()
         profileHeaderView.blurView.setNeedsUpdateConstraints()
-        //tableView.layoutIfNeeded()
         profileHeaderView.profileImage.addGestureRecognizer(tapGesture)
     }
 
     @objc private func tapAction() {
         print("tap")
-       
+        tableView.layoutIfNeeded()
         UIView.animate(withDuration: 0.5, delay: 0.0, options: .curveEaseOut) { [self] in
             centerXProfileImage = profileHeaderView.profileImage.centerXAnchor.constraint(equalTo: self.tableView.centerXAnchor) //screenWidth / 2
             centerYProfileImage = profileHeaderView.profileImage.centerYAnchor.constraint(equalTo: self.tableView.centerYAnchor) //screenHeight / 2 - 80 //magic number для корректировки вертикальности
@@ -84,6 +83,65 @@ class ProfileViewController: UIViewController {
         } completion: { _ in  }}
     }
     
+    func tapGestureOnLikes() {
+        print("tapGestureOnLikes?")
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tapActionOnLikes))
+        profileTableViewCell.likes.addGestureRecognizer(tapGesture)
+    }
+
+    @objc private func tapActionOnLikes() {
+        print("tapOnLikes")
+        
+    }
+    
+    private var choosenPostView: UIView = {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        //$0.backgroundColor = .white
+        //$0.isUserInteractionEnabled = true
+        return $0
+    }(UIView())
+    
+    func showChoosenPostView(_ post: Post)  {
+        profileTableViewCell.setupCell(post)
+        UIView.transition(with: tableView, duration: 1.0, options: .transitionFlipFromBottom, animations: { [self] in
+            self.tableView.addSubview(choosenPostView)
+            choosenPostView.addSubview(profileHeaderView.blurBackgroundEffect())
+            [profileTableViewCell.postName, profileTableViewCell.postImage, profileTableViewCell.postDescription, profileTableViewCell.likes, profileTableViewCell.views].forEach({ choosenPostView.addSubview($0) })
+            
+            NSLayoutConstraint.activate([
+                choosenPostView.topAnchor.constraint(equalTo: view.topAnchor),
+                choosenPostView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                choosenPostView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+                choosenPostView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+
+                profileTableViewCell.postName.topAnchor.constraint(equalTo: choosenPostView.topAnchor, constant: 16),
+                profileTableViewCell.postName.leadingAnchor.constraint(equalTo: choosenPostView.leadingAnchor, constant: 16),
+                profileTableViewCell.postName.trailingAnchor.constraint(equalTo: choosenPostView.trailingAnchor, constant: -16),
+                //postName.heightAnchor.constraint(equalToConstant: 20)
+
+                profileTableViewCell.postImage.topAnchor.constraint(equalTo: profileTableViewCell.postName.bottomAnchor, constant: 12),
+                profileTableViewCell.postImage.leadingAnchor.constraint(equalTo: choosenPostView.leadingAnchor),
+                profileTableViewCell.postImage.trailingAnchor.constraint(equalTo: choosenPostView.trailingAnchor),
+                profileTableViewCell.postImage.heightAnchor.constraint(equalToConstant: absoluteWidth),
+
+                profileTableViewCell.postDescription.topAnchor.constraint(equalTo: profileTableViewCell.postImage.bottomAnchor, constant: 16),
+                profileTableViewCell.postDescription.leadingAnchor.constraint(equalTo: profileTableViewCell.postName.leadingAnchor),
+                profileTableViewCell.postDescription.trailingAnchor.constraint(equalTo: profileTableViewCell.postName.trailingAnchor),
+                profileTableViewCell.postDescription.heightAnchor.constraint(equalToConstant: 100),
+
+                profileTableViewCell.likes.topAnchor.constraint(equalTo: profileTableViewCell.postDescription.bottomAnchor, constant: 16),
+                profileTableViewCell.likes.leadingAnchor.constraint(equalTo: choosenPostView.leadingAnchor, constant: 16),
+                profileTableViewCell.likes.trailingAnchor.constraint(equalTo: choosenPostView.trailingAnchor, constant: -16),
+                profileTableViewCell.likes.bottomAnchor.constraint(equalTo: choosenPostView.bottomAnchor, constant: -16),
+                
+                profileTableViewCell.views.topAnchor.constraint(equalTo: profileTableViewCell.postDescription.bottomAnchor, constant: 16),
+                profileTableViewCell.views.leadingAnchor.constraint(equalTo: choosenPostView.leadingAnchor, constant: 16),
+                profileTableViewCell.views.trailingAnchor.constraint(equalTo: choosenPostView.trailingAnchor, constant: -16),
+                profileTableViewCell.views.bottomAnchor.constraint(equalTo: choosenPostView.bottomAnchor, constant: -16)
+
+            ])
+        })
+    }
 }
     
 //MARK: UITableViewDataSource
@@ -142,6 +200,8 @@ extension ProfileViewController: UITableViewDelegate {
             transition.subtype = CATransitionSubtype.fromTop
             self.navigationController?.view.layer.add(transition, forKey: nil)
             self.navigationController?.pushViewController(post, animated: false)
+        } else {
+            showChoosenPostView(posts[indexPath.row])
         }
     }
 }
