@@ -3,13 +3,25 @@ import UIKit
 
 class InfoViewController: UIViewController {
 
-    private let profileHeaderView = ProfileHeaderView()
+//MARK: ==================================== INITs ====================================
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = .systemGray6
+        showDefaultItems()
+    }
     
+    override func viewWillAppear(_ animated: Bool) {
+        UIApplication.shared.statusBarUIView?.backgroundColor = .none
+    }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        checkOrientation()
+    }
+
+//MARK: ================================== ViewITEMs ==================================
     private let infoDefaultImage: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        //imageView.layer.borderWidth = 3
-        //imageView.layer.borderColor = UIColor.white.cgColor
         imageView.contentMode = .scaleAspectFit
         imageView.image = UIImage(named: "darthvader")
         imageView.clipsToBounds = true
@@ -37,21 +49,6 @@ class InfoViewController: UIViewController {
         alert.addAction(ok)
         alert.addAction(cancel)
         present(alert, animated: true)
-    }
-
-    override func viewDidLoad() {
-        //UIApplication.shared.statusBarUIView?.backgroundColor = .none
-        super.viewDidLoad()
-        view.backgroundColor = .lightGray
-        showDefaultItems()
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        UIApplication.shared.statusBarUIView?.backgroundColor = .none
-    }
-
-    override func viewWillDisappear(_ animated: Bool) {
-        checkOrientation()
     }
 
     private func showDefaultItems() {

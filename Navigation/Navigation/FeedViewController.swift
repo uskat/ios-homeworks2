@@ -2,9 +2,13 @@
 import UIKit
 
 class FeedViewController: UIViewController {
-
-    private let profileHeaderView = ProfileHeaderView()
     
+    struct Post {
+        var title: String
+    }
+    
+    
+//MARK: ==================================== INITs ====================================
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -15,9 +19,8 @@ class FeedViewController: UIViewController {
         checkOrientation()
     }
 
-    struct Post {
-        var title: String
-    }
+    
+//MARK: ================================== ViewITEMs ==================================
     private let newPost = Post(title: "Post")
     
     private let feedStackView: UIStackView = {
@@ -28,25 +31,25 @@ class FeedViewController: UIViewController {
         stackView.spacing = 10
         return stackView
     }()
+    
     private lazy var feedButton1: CustomButton = {
         let button = CustomButton()
-        //button.layer.cornerRadius = 4
         button.backgroundColor = .systemBlue
         button.setTitle("New Post", for: .normal)
         button.setTitle("Post opening...", for: .highlighted)
         button.addTarget(self, action: #selector(tapFeedButton), for: .touchUpInside)
         return button
     }()
+    
     private lazy var feedButton2: CustomButton = {
         let button = CustomButton()
-        //button.layer.cornerRadius = 4
         button.backgroundColor = .systemBlue
         button.setTitle("New Post!!!", for: .normal)
         button.setTitle("Post opening...", for: .highlighted)
         button.addTarget(self, action: #selector(tapFeedButton), for: .touchUpInside)
         return button
     }()
-
+    
     @objc private func tapFeedButton() {
         let thirdVC = PostViewController()
         thirdVC.post = newPost
@@ -61,11 +64,8 @@ class FeedViewController: UIViewController {
             feedStackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             feedStackView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             feedStackView.widthAnchor.constraint(equalToConstant: screenWidth),
-//            feedStackView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-//            feedStackView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             feedStackView.heightAnchor.constraint(equalToConstant: 110)
         ])
     }
-
 }
 
