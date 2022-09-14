@@ -3,17 +3,16 @@ import UIKit
 
 class FeedViewController: UIViewController {
 
-    private let sceneDelegate = SceneDelegate()
     private let profileHeaderView = ProfileHeaderView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemGray4
+        view.backgroundColor = .white
         showDefaultItems()
     }
     
     override func viewWillLayoutSubviews() {
-        sceneDelegate.checkOrientation()
+        checkOrientation()
     }
 
     struct Post {
@@ -61,8 +60,9 @@ class FeedViewController: UIViewController {
         NSLayoutConstraint.activate([
             feedStackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             feedStackView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            feedStackView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            feedStackView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            feedStackView.widthAnchor.constraint(equalToConstant: screenWidth),
+//            feedStackView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+//            feedStackView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             feedStackView.heightAnchor.constraint(equalToConstant: 110)
         ])
     }

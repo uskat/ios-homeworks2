@@ -2,13 +2,12 @@
 import UIKit
 
 class PostViewController: UIViewController {
-    
-    private let sceneDelegate = SceneDelegate()
+
     var post: FeedViewController.Post?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .lightGray
+        view.backgroundColor = .white
         showBarButton()
         if let post = post {
             title = post.title
@@ -16,7 +15,7 @@ class PostViewController: UIViewController {
     }
  
     override func viewWillLayoutSubviews() {
-        sceneDelegate.checkOrientation()
+        checkOrientation()
     }
 
     private func showBarButton() {

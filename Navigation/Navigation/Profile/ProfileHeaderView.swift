@@ -15,17 +15,17 @@ class ProfileHeaderView: UIView {
     private let headerView: UIView = {
         let myView = UIView()
         myView.translatesAutoresizingMaskIntoConstraints = false
-        myView.backgroundColor = .systemGray5
+        myView.backgroundColor = .systemGray6
         return myView
     }()
     
     private let profileImage: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.layer.cornerRadius = 140 / 2  //размер 140 (140/2 - радиус)
+        imageView.layer.cornerRadius = 140 / 2          //размер 140 (140/2 - радиус)
         imageView.layer.borderWidth = 3
         imageView.layer.borderColor = UIColor.white.cgColor
-        imageView.contentMode = .scaleAspectFill
+        imageView.contentMode = .scaleAspectFill        //полное заполнение
         imageView.image = UIImage(named: "obiwan")
         imageView.clipsToBounds = true
         return imageView
@@ -67,6 +67,7 @@ class ProfileHeaderView: UIView {
             print("Новый статус - \(newStatus)")
         }
         editStatus.text = ""
+        endEditing(true)
         rotateAndSleep(0) //прячем вспомогательную кнопку без анимации
     }
     
@@ -85,21 +86,21 @@ class ProfileHeaderView: UIView {
         let status = UITextField()
         status.font = UIFont.systemFont(ofSize: 15, weight: .regular)
         status.translatesAutoresizingMaskIntoConstraints = false
-        status.placeholder = "введите новый статус"
-        status.adjustsFontSizeToFitWidth = true
-        status.minimumFontSize = 10
+        status.placeholder = "type new status"          //текстовая подсказка в поле textField
+        status.adjustsFontSizeToFitWidth = true         //уменьшение шрифта, если введенный текст не помещается
+        status.minimumFontSize = 10                     //до какого значения уменьшается шрифт
         status.backgroundColor = .white
         status.layer.cornerRadius = 12
         status.layer.borderWidth = 1
         status.layer.borderColor = UIColor.black.cgColor
-        status.layer.sublayerTransform = CATransform3DMakeTranslation(5, 0, 0)
+        status.layer.sublayerTransform = CATransform3DMakeTranslation(5, 0, 0) //сдвиг курсора на 5пт в textField (для красоты)
         status.addTarget(self, action: #selector(beginToEditStatus), for: .allEditingEvents)
         status.addTarget(self, action: #selector(changeStatusText), for: .editingChanged)
         status.addTarget(self, action: #selector(endToEditStatus), for: .editingDidEnd)
         return status
     }()
     
-    @objc private func beginToEditStatus() {
+    @objc private func beginToEditStatus(_ textField: UITextField) {
         buttonAccept.isHidden = false
     }
     @objc private func changeStatusText(_ textField: UITextField) {
@@ -108,7 +109,7 @@ class ProfileHeaderView: UIView {
             statusText = myText
         }
     }
-    @objc private func endToEditStatus() {
+    @objc private func endToEditStatus(_ textField: UITextField) {
         rotateAndSleep(0) //прячем вспомогательную кнопку без анимации
     }
 
@@ -124,12 +125,13 @@ class ProfileHeaderView: UIView {
         return button
     }()
     @objc private func tapAcceptStatusButton() {
+        endEditing(true)
         profileStatus.text = statusText
         editStatus.text = ""
         rotateAndSleep(1) //прячем вспомогательную кнопку с анимацией (после нажатия на неё)
     }
     private func rotateAndSleep(_ key: Int) {
-        if key == 1 { //анимация на вспомогательной кнопке
+        if key == 1 { //анимация вращения вокруг своей оси на вспомогательной кнопке
             var perspective = CATransform3DIdentity
             perspective.m34 = 1 / -200
             buttonAccept.imageView!.layer.transform = perspective
@@ -139,7 +141,8 @@ class ProfileHeaderView: UIView {
             rotate.duration = 2
             buttonAccept.imageView!.layer.add(rotate, forKey: nil)
         }
-        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(2), execute: {
+        //скрываем кнопку через 2 секунды (чтобы успела пройти анимация)
+        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(2), execute: { //задержка выполнения любой команды
             self.buttonAccept.isHidden = true
         })
     }
@@ -162,38 +165,28 @@ class ProfileHeaderView: UIView {
             profileImage.topAnchor.constraint(equalTo: headerView.topAnchor, constant: 16),
             profileImage.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 16),
             profileImage.widthAnchor.constraint(equalToConstant: 140),
-            profileImage.heightAnchor.constraint(equalToConstant: 140)
-        ])
-        
-        NSLayoutConstraint.activate([
+            profileImage.heightAnchor.constraint(equalToConstant: 140),
+
             profileLabel.topAnchor.constraint(equalTo: headerView.topAnchor, constant: 27),
             profileLabel.leadingAnchor.constraint(equalTo: profileImage.trailingAnchor, constant: 16),
             profileLabel.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -16),
-            profileLabel.heightAnchor.constraint(equalToConstant: 30)
-        ])
-        
-        NSLayoutConstraint.activate([
+            profileLabel.heightAnchor.constraint(equalToConstant: 30),
+
             mainButton.topAnchor.constraint(equalTo: profileImage.bottomAnchor, constant: 16),
             mainButton.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 16),
             mainButton.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -16),
-            mainButton.heightAnchor.constraint(equalToConstant: 50)
-        ])
-        
-        NSLayoutConstraint.activate([
+            mainButton.heightAnchor.constraint(equalToConstant: 50),
+
             profileStatus.bottomAnchor.constraint(equalTo: mainButton.topAnchor, constant: -56),
             profileStatus.leadingAnchor.constraint(equalTo: profileImage.trailingAnchor, constant: 16),
             profileStatus.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -16),
-            profileStatus.heightAnchor.constraint(equalToConstant: 26)
-        ])
-        
-        NSLayoutConstraint.activate([
+            profileStatus.heightAnchor.constraint(equalToConstant: 26),
+
             editStatus.bottomAnchor.constraint(equalTo: mainButton.topAnchor, constant: -8),
             editStatus.leadingAnchor.constraint(equalTo: profileImage.trailingAnchor, constant: 16),
             editStatus.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -16),
-            editStatus.heightAnchor.constraint(equalToConstant: 40)
-        ])
-        
-        NSLayoutConstraint.activate([
+            editStatus.heightAnchor.constraint(equalToConstant: 40),
+
             buttonAccept.topAnchor.constraint(equalTo: editStatus.topAnchor, constant: 5),
             buttonAccept.trailingAnchor.constraint(equalTo: editStatus.trailingAnchor, constant: -5),
             buttonAccept.widthAnchor.constraint(equalToConstant: 30),

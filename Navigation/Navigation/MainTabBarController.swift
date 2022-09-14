@@ -1,6 +1,18 @@
 
 import UIKit
 
+//код для проверки ориентации экрана и изменения видимости статус бара.
+public func checkOrientation() {
+    if (UIScreen.main.bounds.height > UIScreen.main.bounds.width) {
+        //print("height > width")
+        UIApplication.shared.statusBarUIView?.isHidden = false
+        UIApplication.shared.statusBarUIView?.backgroundColor = .systemGray6
+    } else {
+        //print("isHidden")
+        UIApplication.shared.statusBarUIView?.isHidden = true
+    }
+}
+
 //код для покраски статус бара (заимствован)
 extension UIApplication {
 var statusBarUIView: UIView? {
@@ -32,7 +44,6 @@ var statusBarUIView: UIView? {
 
 class MainTabBarController: UITabBarController {
 
-    private let sceneDelegate = SceneDelegate()
     let firstVC = FeedViewController()
     //let secondVC = ProfileViewController()
     let secondVC = LogInViewController()
@@ -51,9 +62,9 @@ class MainTabBarController: UITabBarController {
         //let appDelegate = AppDelegate()
         //AppDelegate.topBarHeight = findNavigationBarHeight() + appDelegate.findStatusBarHeight()
         //красим все бары в один цвет
-        UINavigationBar.appearance().backgroundColor = .white
+        UINavigationBar.appearance().backgroundColor = .systemGray6
         //UIBarButtonItem.appearance().tintColor = UIColor.magenta
-        UITabBar.appearance().backgroundColor = .white
+        UITabBar.appearance().backgroundColor = .systemGray6
     }
     
     func setupControllers() {

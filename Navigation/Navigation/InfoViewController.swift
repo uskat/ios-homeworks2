@@ -4,7 +4,6 @@ import UIKit
 class InfoViewController: UIViewController {
 
     private let profileHeaderView = ProfileHeaderView()
-    private let sceneDelegate = SceneDelegate()
     
     private let infoDefaultImage: UIImageView = {
         let imageView = UIImageView()
@@ -52,7 +51,7 @@ class InfoViewController: UIViewController {
     }
 
     override func viewWillDisappear(_ animated: Bool) {
-        sceneDelegate.checkOrientation()
+        checkOrientation()
     }
 
     private func showDefaultItems() {
@@ -63,9 +62,8 @@ class InfoViewController: UIViewController {
             infoDefaultImage.topAnchor.constraint(equalTo: view.topAnchor, constant: 8),
             infoDefaultImage.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 0),
             infoDefaultImage.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: 0),
-            infoDefaultImage.bottomAnchor.constraint(equalTo: infoButton.topAnchor, constant: -8)
-        ])
-        NSLayoutConstraint.activate([
+            infoDefaultImage.bottomAnchor.constraint(equalTo: infoButton.topAnchor, constant: -8),
+
             infoButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             infoButton.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             infoButton.widthAnchor.constraint(equalToConstant: screenWidth),

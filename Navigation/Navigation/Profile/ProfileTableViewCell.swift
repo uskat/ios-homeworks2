@@ -88,38 +88,28 @@ class ProfileTableViewCell: UITableViewCell {
             postView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 0),
             postView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 0),
             postView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -0),
-            postView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -0)
-        ])
-        
-        NSLayoutConstraint.activate([
+            postView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -0),
+
             postName.topAnchor.constraint(equalTo: postView.topAnchor, constant: 16),
             postName.leadingAnchor.constraint(equalTo: postView.leadingAnchor, constant: 16),
             postName.trailingAnchor.constraint(equalTo: postView.trailingAnchor, constant: -16),
             //postName.heightAnchor.constraint(equalToConstant: 20)
-        ])
-        
-        NSLayoutConstraint.activate([
+
             postImage.topAnchor.constraint(equalTo: postName.bottomAnchor, constant: 12),
             postImage.leadingAnchor.constraint(equalTo: postView.leadingAnchor),
             postImage.trailingAnchor.constraint(equalTo: postView.trailingAnchor),
-            postImage.heightAnchor.constraint(equalToConstant: screenWidth)
-        ])
-        
-        NSLayoutConstraint.activate([
+            postImage.heightAnchor.constraint(equalToConstant: screenWidth),
+
             postDescription.topAnchor.constraint(equalTo: postImage.bottomAnchor, constant: 16),
             postDescription.leadingAnchor.constraint(equalTo: postName.leadingAnchor),
             postDescription.trailingAnchor.constraint(equalTo: postName.trailingAnchor),
             //postDescription.heightAnchor.constraint(equalToConstant: )
-        ])
-        
-        NSLayoutConstraint.activate([
+
             likes.topAnchor.constraint(equalTo: postDescription.bottomAnchor, constant: 16),
             likes.leadingAnchor.constraint(equalTo: postView.leadingAnchor, constant: 16),
             likes.trailingAnchor.constraint(equalTo: postView.trailingAnchor, constant: -16),
-            likes.bottomAnchor.constraint(equalTo: postView.bottomAnchor, constant: -16)
-        ])
-        
-        NSLayoutConstraint.activate([
+            likes.bottomAnchor.constraint(equalTo: postView.bottomAnchor, constant: -16),
+            
             views.topAnchor.constraint(equalTo: postDescription.bottomAnchor, constant: 16),
             views.leadingAnchor.constraint(equalTo: postView.leadingAnchor, constant: 16),
             views.trailingAnchor.constraint(equalTo: postView.trailingAnchor, constant: -16),

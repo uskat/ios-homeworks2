@@ -2,14 +2,13 @@
 import UIKit
 
 class ProfileViewController: UIViewController {
-    
-    private let sceneDelegate = SceneDelegate()
+
     private var profileHeaderView = ProfileHeaderView()
     private var posts: [Post] = Post.addPosts()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemGray4
+        view.backgroundColor = .white
         showProfileTable()
     }
     
@@ -38,6 +37,7 @@ class ProfileViewController: UIViewController {
         $0.dataSource = self
         $0.delegate = self
         $0.register(ProfileTableViewCell.self, forCellReuseIdentifier: ProfileTableViewCell.identifier)
+        $0.register(PhotosTableViewCell.self, forCellReuseIdentifier: PhotosTableViewCell.identifier)
         return $0
     }(UITableView(frame: .zero, style: .grouped))
     
@@ -59,8 +59,9 @@ extension ProfileViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return posts.count
+        return posts.count + 1
     }
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 //        print(#function)
 //        let cell = UITableViewCell(style: .default, reuseIdentifier: nil)
@@ -69,9 +70,15 @@ extension ProfileViewController: UITableViewDataSource {
 //        context.image = posts[indexPath.row].imageName
 //        cell.contentConfiguration = context
 //        return cell
-        let cell = tableView.dequeueReusableCell(withIdentifier: ProfileTableViewCell.identifier, for: indexPath) as! ProfileTableViewCell
-        cell.setupCell(posts[indexPath.row])
-        return cell
+        if indexPath.row == 0 {
+            let cell = tableView.dequeueReusableCell(withIdentifier: PhotosTableViewCell.identifier, for: indexPath) as! PhotosTableViewCell
+            //cell.setupCell(posts[1])
+            return cell
+        } else {
+            let cell = tableView.dequeueReusableCell(withIdentifier: ProfileTableViewCell.identifier, for: indexPath) as! ProfileTableViewCell
+            cell.setupCell(posts[indexPath.row - 1])
+            return cell
+        }
     }
 }
 //MARK: высота ячейки (строки) в таблице. Либо фиксированное значение, либо авто - UITableView.automaticDimension
@@ -86,6 +93,13 @@ extension ProfileViewController: UITableViewDelegate {
     }
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         240
+    }
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if indexPath.row == 0 {
+            //let post = PostViewController()
+            let post = PhotosViewController()
+            navigationController?.pushViewController(post, animated: true)
+        }
     }
 }
 

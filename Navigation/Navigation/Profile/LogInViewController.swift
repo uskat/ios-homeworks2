@@ -7,6 +7,7 @@ class LogInViewController: UIViewController {
     
     private let scrollLoginView: UIScrollView = {
         $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.backgroundColor = .white
         return $0
     }(UIScrollView())
     
@@ -17,7 +18,6 @@ class LogInViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
         showLoginItems()
     }
     
@@ -44,14 +44,14 @@ class LogInViewController: UIViewController {
         notification.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
-    let logoItem: UIImageView = {
+    private let logoItem: UIImageView = {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.contentMode = .scaleAspectFit
         $0.image = UIImage(named: "logo")
         return $0
     }(UIImageView())
     
-    let stackLogin: UIStackView = {
+    private let stackLogin: UIStackView = {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.axis = .vertical
         $0.distribution = .fillEqually
@@ -68,13 +68,14 @@ class LogInViewController: UIViewController {
         $0.font = UIFont.systemFont(ofSize: 16, weight: .regular)
         $0.translatesAutoresizingMaskIntoConstraints = false
         //$0.borderStyle = .roundedRect
-        $0.placeholder = "Введите логин"
+        $0.placeholder = "Login"
         $0.delegate = self
         $0.textColor = .black
         $0.tintColor = UIColor.AccentColor.normal
         $0.layer.sublayerTransform = CATransform3DMakeTranslation(5, 0, 0)
         $0.autocapitalizationType = .none
         $0.backgroundColor = .systemGray6
+        $0.becomeFirstResponder()
         return $0
     }(UITextField())
     
@@ -82,7 +83,7 @@ class LogInViewController: UIViewController {
         $0.font = UIFont.systemFont(ofSize: 16, weight: .regular)
         $0.translatesAutoresizingMaskIntoConstraints = false
         //$0.borderStyle = .roundedRect
-        $0.placeholder = "Введите пароль"
+        $0.placeholder = "Password"
         $0.delegate = self
         $0.textColor = .black
         $0.tintColor = UIColor.AccentColor.normal
@@ -137,28 +138,20 @@ class LogInViewController: UIViewController {
             contentView.widthAnchor.constraint(equalTo: scrollLoginView.widthAnchor)
         ])
         
-        contentView.addSubview(logoItem)
+        [logoItem, stackLogin, loginButton].forEach({ contentView.addSubview($0) })
+        [login, pass].forEach({ stackLogin.addArrangedSubview($0) })
         
         NSLayoutConstraint.activate([
             logoItem.topAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.topAnchor, constant: 120),
             logoItem.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
             logoItem.widthAnchor.constraint(equalToConstant: 100),
-            logoItem.heightAnchor.constraint(equalToConstant: 100)
-        ])
-        
-        contentView.addSubview(stackLogin)
-        [login, pass].forEach({ stackLogin.addArrangedSubview($0) })
-        
-        NSLayoutConstraint.activate([
+            logoItem.heightAnchor.constraint(equalToConstant: 100),
+
             stackLogin.topAnchor.constraint(equalTo: logoItem.bottomAnchor, constant: 120),
             stackLogin.leadingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.leadingAnchor, constant: 16),
             stackLogin.trailingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.trailingAnchor, constant: -16),
-            stackLogin.heightAnchor.constraint(equalToConstant: 100)
-        ])
-        
-        contentView.addSubview(loginButton)
-        
-        NSLayoutConstraint.activate([
+            stackLogin.heightAnchor.constraint(equalToConstant: 100),
+
             loginButton.topAnchor.constraint(equalTo: stackLogin.bottomAnchor, constant: 16),
             loginButton.leadingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.leadingAnchor, constant: 16),
             loginButton.trailingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.trailingAnchor, constant: -16),
