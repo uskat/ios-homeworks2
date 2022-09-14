@@ -1,6 +1,6 @@
 
 import UIKit
- 
+
 class InfoViewController: UIViewController {
 
     private let profileHeaderView = ProfileHeaderView()
