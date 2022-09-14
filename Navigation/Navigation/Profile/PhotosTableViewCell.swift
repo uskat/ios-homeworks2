@@ -64,7 +64,7 @@ class PhotosTableViewCell: UITableViewCell {
         
         let outSpace: CGFloat = 12  //внешние отступы от фото до края экрана
         let inSpace: CGFloat = 8    //внутренние отступы между фото
-        let heightOfFourPhotos = (screenWidth - 2 * outSpace - 3 * inSpace) / 4
+        let heightOfFourPhotos = (absoluteWidth - 2 * outSpace - 3 * inSpace) / 4
         
         NSLayoutConstraint.activate([
             cellTitleName.topAnchor.constraint(equalTo: contentView.topAnchor, constant: outSpace),

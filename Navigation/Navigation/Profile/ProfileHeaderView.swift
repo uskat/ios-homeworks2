@@ -8,28 +8,101 @@ public var screenHeight: CGFloat {
     return UIScreen.main.bounds.height
 }
 
+public var bottomBlurView = NSLayoutConstraint()
+public var centerXProfileImage = NSLayoutConstraint()
+public var centerYProfileImage = NSLayoutConstraint()
+public var topProfileImage = NSLayoutConstraint()
+public var leadingProfileImage = NSLayoutConstraint()
+public var trailingProfileImage = NSLayoutConstraint()
+public var bottomProfileImage = NSLayoutConstraint()
+public var widthProfileImage = NSLayoutConstraint()
+public var heightProfileImage = NSLayoutConstraint()
+public let sizeProfileImage: CGFloat = 140
+
 class ProfileHeaderView: UIView {
 
     private var statusText = "Waiting for something....."
     
-    private let headerView: UIView = {
+    let space: CGFloat = 16
+    
+    let headerView: UIView = {
         let myView = UIView()
         myView.translatesAutoresizingMaskIntoConstraints = false
         myView.backgroundColor = .systemGray6
         return myView
     }()
     
-    private let profileImage: UIImageView = {
+    let profileImage: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.layer.cornerRadius = 140 / 2          //размер 140 (140/2 - радиус)
+        imageView.layer.cornerRadius = sizeProfileImage / 2          //размер 140 (140/2 - радиус)
         imageView.layer.borderWidth = 3
         imageView.layer.borderColor = UIColor.white.cgColor
         imageView.contentMode = .scaleAspectFill        //полное заполнение
         imageView.image = UIImage(named: "obiwan")
         imageView.clipsToBounds = true
+        imageView.isUserInteractionEnabled = true
         return imageView
     }()
+    
+    //======================================================================================================
+    let buttonX: UIButton = {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.layer.cornerRadius = 12
+        $0.backgroundColor = .systemGray
+        $0.setImage(UIImage(systemName: "x.circle"), for: .normal)
+        $0.tintColor = .white
+        $0.alpha = 0.0
+        $0.isHidden = true
+        $0.addTarget(self, action: #selector(tapButtonX), for: .touchUpInside)
+        return $0
+    }(UIButton())
+    
+    @objc private func tapButtonX() {
+        print("tap x")
+        bottomBlurView = blurView.bottomAnchor.constraint(equalTo: headerView.bottomAnchor)
+        headerView.addSubview(profileImage)
+        
+        UIView.animate(withDuration: 0.5, delay: 0.0, options: .curveEaseIn) { [self] in
+
+            centerXProfileImage = profileImage.centerXAnchor.constraint(equalTo: leadingAnchor, constant: space + sizeProfileImage / 2)
+            centerYProfileImage = profileImage.centerYAnchor.constraint(equalTo: topAnchor, constant: space + sizeProfileImage / 2)
+            widthProfileImage = profileImage.widthAnchor.constraint(equalToConstant: sizeProfileImage)
+            heightProfileImage = profileImage.heightAnchor.constraint(equalToConstant: sizeProfileImage)
+            NSLayoutConstraint.activate([centerXProfileImage, centerYProfileImage, widthProfileImage, heightProfileImage])
+
+            profileImage.setNeedsUpdateConstraints()
+            self.layoutIfNeeded()
+            self.profileImage.layer.cornerRadius = sizeProfileImage / 2
+            self.blurView.alpha = 0.0
+        } completion: { _ in   }
+
+        UIView.animate(withDuration: 0.3, delay: 0.0, options: .curveEaseOut) { [self] in
+            self.buttonX.alpha = 0.0
+        } completion: { _ in
+            self.buttonX.isHidden = true
+        }
+    }
+    
+    func blurBackgroundEffect() -> UIVisualEffectView {
+        //код BlurEffect укороченный без констрейнтов
+        let effect = UIVisualEffectView(effect: UIBlurEffect(style: UIBlurEffect.Style.dark))
+        effect.alpha = 0.85
+        effect.translatesAutoresizingMaskIntoConstraints = false
+        effect.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        //effect.frame = view.frame
+        return effect
+    }
+    
+    let blurView: UIView = {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        //$0.backgroundColor = .none
+        $0.alpha = 0.0
+        return $0
+    }(UIView())
+    
+    
+    //======================================================================================================
 
     private let profileLabel: UITextView = {
         let label = UITextView()
@@ -158,39 +231,59 @@ class ProfileHeaderView: UIView {
             headerView.heightAnchor.constraint(equalToConstant: 240)
         ])
         
-        [profileImage, profileLabel, mainButton, profileStatus, editStatus, buttonAccept].forEach { headerView.addSubview($0) }
-        //translatesAutoresizingMaskIntoConstraints = false
+        [profileLabel, mainButton, profileStatus, editStatus, buttonAccept].forEach { headerView.addSubview($0) }
         
         NSLayoutConstraint.activate([
-            profileImage.topAnchor.constraint(equalTo: headerView.topAnchor, constant: 16),
-            profileImage.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 16),
-            profileImage.widthAnchor.constraint(equalToConstant: 140),
-            profileImage.heightAnchor.constraint(equalToConstant: 140),
-
             profileLabel.topAnchor.constraint(equalTo: headerView.topAnchor, constant: 27),
-            profileLabel.leadingAnchor.constraint(equalTo: profileImage.trailingAnchor, constant: 16),
-            profileLabel.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -16),
+            profileLabel.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: sizeProfileImage + 2 * space),
+            profileLabel.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -space),
             profileLabel.heightAnchor.constraint(equalToConstant: 30),
 
-            mainButton.topAnchor.constraint(equalTo: profileImage.bottomAnchor, constant: 16),
-            mainButton.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 16),
-            mainButton.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -16),
+            mainButton.topAnchor.constraint(equalTo: headerView.topAnchor, constant: sizeProfileImage + 2 * space),
+            mainButton.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: space),
+            mainButton.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -space),
             mainButton.heightAnchor.constraint(equalToConstant: 50),
 
-            profileStatus.bottomAnchor.constraint(equalTo: mainButton.topAnchor, constant: -56),
-            profileStatus.leadingAnchor.constraint(equalTo: profileImage.trailingAnchor, constant: 16),
-            profileStatus.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -16),
+            profileStatus.bottomAnchor.constraint(equalTo: mainButton.topAnchor, constant: -space - 40),
+            profileStatus.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: sizeProfileImage + 2 * space),
+            profileStatus.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -space),
             profileStatus.heightAnchor.constraint(equalToConstant: 26),
 
-            editStatus.bottomAnchor.constraint(equalTo: mainButton.topAnchor, constant: -8),
-            editStatus.leadingAnchor.constraint(equalTo: profileImage.trailingAnchor, constant: 16),
-            editStatus.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -16),
+            editStatus.bottomAnchor.constraint(equalTo: mainButton.topAnchor, constant: -space / 2),
+            editStatus.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: sizeProfileImage + 2 * space),
+            editStatus.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -space),
             editStatus.heightAnchor.constraint(equalToConstant: 40),
 
             buttonAccept.topAnchor.constraint(equalTo: editStatus.topAnchor, constant: 5),
             buttonAccept.trailingAnchor.constraint(equalTo: editStatus.trailingAnchor, constant: -5),
             buttonAccept.widthAnchor.constraint(equalToConstant: 30),
             buttonAccept.heightAnchor.constraint(equalToConstant: 30)
+        ])
+        
+        [blurView, profileImage, buttonX].forEach { headerView.addSubview($0) }
+        blurView.addSubview(blurBackgroundEffect())
+        
+        bottomBlurView = blurView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor)
+        //topProfileImage = profileImage.topAnchor.constraint(equalTo: blurView.topAnchor, constant: space)
+        //leadingProfileImage = profileImage.leadingAnchor.constraint(equalTo: blurView.leadingAnchor, constant: space)
+        centerXProfileImage = profileImage.centerXAnchor.constraint(equalTo: headerView.leadingAnchor, constant: space + sizeProfileImage / 2)
+        centerYProfileImage = profileImage.centerYAnchor.constraint(equalTo: headerView.topAnchor, constant: space + sizeProfileImage / 2)
+        widthProfileImage = profileImage.widthAnchor.constraint(equalToConstant: sizeProfileImage)
+        heightProfileImage = profileImage.heightAnchor.constraint(equalToConstant: sizeProfileImage)
+        
+        NSLayoutConstraint.activate([
+            blurView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
+            blurView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
+            blurView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
+            bottomBlurView,
+            
+            /*topProfileImage, leadingProfileImage,*/
+            centerXProfileImage, centerYProfileImage, widthProfileImage, heightProfileImage,
+            
+            buttonX.topAnchor.constraint(equalTo: blurView.topAnchor, constant: 20),
+            buttonX.trailingAnchor.constraint(equalTo: blurView.trailingAnchor, constant: -20),
+            buttonX.widthAnchor.constraint(equalToConstant: 24),
+            buttonX.heightAnchor.constraint(equalToConstant: 24)
         ])
     }
     
@@ -201,4 +294,7 @@ class ProfileHeaderView: UIView {
     required init?(coder: NSCoder) {
         super.init(coder: coder)
     }
+    
+    //MARK: жесты и анимация
+
 }

@@ -3,17 +3,11 @@ import UIKit
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
-
-    //static var topBarHeight: Int = 0
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         return true
     }
- 
-    /*func findStatusBarHeight() -> Int {  //k1
-        return Int(UIApplication.shared.statusBarFrame.size.height)
-    }*/
 
     // MARK: UISceneSession Lifecycle
 
