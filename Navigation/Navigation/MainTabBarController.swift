@@ -34,7 +34,8 @@ class MainTabBarController: UITabBarController {
 
     private let sceneDelegate = SceneDelegate()
     let firstVC = FeedViewController()
-    var secondVC = ProfileViewController()
+    //let secondVC = ProfileViewController()
+    let secondVC = LogInViewController()
     
     /*func findNavigationBarHeight() -> Int {
         if let k = secondVC.navigationController?.navigationBar.frame.height {
@@ -54,14 +55,14 @@ class MainTabBarController: UITabBarController {
         //UIBarButtonItem.appearance().tintColor = UIColor.magenta
         UITabBar.appearance().backgroundColor = .white
     }
- 
-    private func setupControllers() {
+    
+    func setupControllers() {
         firstVC.tabBarItem.title = "Feed"
         firstVC.tabBarItem.image = UIImage(systemName: "rectangle.grid.2x2")
         firstVC.navigationItem.title = "Feed"
         secondVC.tabBarItem.title = "Profile"
         secondVC.tabBarItem.image = UIImage(systemName: "person.crop.circle")
-        secondVC.navigationItem.title = "Profile"
+        secondVC.navigationItem.title = "Log out"
         let firstNavigationVC = UINavigationController(rootViewController: firstVC)
         let secondNavigationVC = UINavigationController(rootViewController: secondVC)
         viewControllers = [firstNavigationVC, secondNavigationVC]

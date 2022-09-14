@@ -16,8 +16,8 @@ class InfoViewController: UIViewController {
         imageView.clipsToBounds = true
         return imageView
     }()
-    private let infoButton: UIButton = {
-        let button = UIButton()
+    private lazy var infoButton: CustomButton = {
+        let button = CustomButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.layer.cornerRadius = 4
         button.backgroundColor = .systemBlue

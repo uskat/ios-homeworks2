@@ -10,10 +10,6 @@ class ProfileHeaderView: UIView {
     }
     private var statusText = "Waiting for something....."
     
-    //var status = UITextView()
-    //var editStatus = UITextField()
-    //var buttonAccept = UIButton(type: .system)
-    
     private let profileImage: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -36,15 +32,15 @@ class ProfileHeaderView: UIView {
         return label
     }()
 
-    private let mainButton: UIButton = {
-        let button = UIButton()
+    private lazy var mainButton: CustomButton = {
+        let button = CustomButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.layer.cornerRadius = 4
         button.backgroundColor = .systemBlue
         button.setTitle("Set status", for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.setTitle("Status is being recorded", for: .highlighted)
-        button.setTitleColor(.systemGray, for: .highlighted)
+        //button.setTitleColor(.systemGray, for: .highlighted)
         button.addTarget(self, action: #selector(tapMainButton), for: .touchUpInside)
 
         button.layer.shadowOffset = CGSize(width: 4, height: 4)
@@ -57,12 +53,12 @@ class ProfileHeaderView: UIView {
         if let oldStatus = profileStatus.text {
             print("Прежний статус (до изменения) - \(oldStatus)")
         }
-        profileStatus.text = editStatus.text
+        profileStatus.text = statusText
         if let newStatus = editStatus.text {
             print("Новый статус - \(newStatus)")
         }
         editStatus.text = ""
-        rotateAndSleep(0)
+        rotateAndSleep(0) //прячем вспомогательную кнопку без анимации
     }
     
     private let profileStatus: UITextView = {
@@ -76,7 +72,7 @@ class ProfileHeaderView: UIView {
         return status
     }()
 
-    private let editStatus: UITextField = {
+    private lazy var editStatus: UITextField = {
         let status = UITextField()
         status.font = UIFont.systemFont(ofSize: 15, weight: .regular)
         status.translatesAutoresizingMaskIntoConstraints = false
@@ -100,11 +96,11 @@ class ProfileHeaderView: UIView {
         }
     }
     @objc private func endToEditStatus() {
-        buttonAccept.isHidden = true
+        rotateAndSleep(0) //прячем вспомогательную кнопку без анимации
     }
 
-    private let buttonAccept: UIButton = {
-        let button = UIButton()
+    private lazy var buttonAccept: CustomButton = {
+        let button = CustomButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.layer.cornerRadius = 9
         button.backgroundColor = .systemBlue
@@ -117,10 +113,10 @@ class ProfileHeaderView: UIView {
     @objc private func tapAcceptStatusButton() {
         profileStatus.text = statusText
         editStatus.text = ""
-        rotateAndSleep(1)
+        rotateAndSleep(1) //прячем вспомогательную кнопку с анимацией (после нажатия на неё)
     }
     private func rotateAndSleep(_ key: Int) {
-        if key == 1 {
+        if key == 1 { //анимация на вспомогательной кнопке
             var perspective = CATransform3DIdentity
             perspective.m34 = 1 / -200
             buttonAccept.imageView!.layer.transform = perspective

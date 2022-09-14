@@ -9,13 +9,14 @@ class ProfileViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemGray4
-    }
- 
-    override func viewWillLayoutSubviews() {
         showHeaderView()
         showNewButton()
+    }
+    
+    override func viewWillLayoutSubviews() {
         sceneDelegate.checkOrientation()
     }
+    
     private func showHeaderView() {
         view.addSubview(profileView)
         profileView.showProfileHeaderView()
@@ -29,30 +30,35 @@ class ProfileViewController: UIViewController {
         ])
     }
     
-    private let newButton: UIButton = {
-        let button = UIButton()
+    //MARK: Log out Button in NavagationBar ===============================================================================
+    private func showLogoutBarButton() {
+        let button = UIBarButtonItem(title: "Log out", style: .plain, target: self, action: #selector(tapLogoutBarButton))
+        navigationItem.rightBarButtonItem = button
+    }
+    @objc private func tapLogoutBarButton() {
+        self.dismiss(animated: true)
+    }
+    
+    //MARK: bottom part of ProfileView ====================================================================================
+    private let newButton: CustomButton = {
+        let button = CustomButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        //button.layer.cornerRadius = 4
         button.backgroundColor = .systemBlue
         button.setTitle("New button", for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.setTitle("Do nothing", for: .highlighted)
         button.setTitleColor(.systemGray, for: .highlighted)
         button.addTarget(self, action: #selector(tapNewButton), for: .touchUpInside)
-        //button.layer.shadowOffset = CGSize(width: 4, height: 4)
-        //button.layer.shadowRadius = 4
-        //button.layer.shadowColor = UIColor.black.cgColor
-        //button.layer.shadowOpacity = 0.7
         return button
     }()
     @objc private func tapNewButton() {
         print("О, даааа! Я ничего не умею, но нажми на меня еще раз!")
     }
+    
     private func showNewButton() {
         view.addSubview(newButton)
         
         NSLayoutConstraint.activate([
-
             newButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             newButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             newButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
