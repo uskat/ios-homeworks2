@@ -1,3 +1,5 @@
-ios-homeworks2
-## This is first course work's repository.
-_VK messenger (Profile, Posts, Photos collection, some animation, etc)_
+# VK messenger
+### This is first course work's repository.
+_Description: Profile, Posts, Photos, with animation, etc_
+
+_Used: NavigationController, CollectionView, TableView, Delegates, practice in some Animation and Gestures_
